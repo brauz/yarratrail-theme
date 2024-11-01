@@ -1,0 +1,93 @@
+{% liquid
+  if template contains 'gift-card' or product.gift_card?
+    assign class_inner = 'pt-5 pb-8'
+  else
+    assign class_inner = 'py-8'
+  endif
+
+  assign title = 'product.general.recently_viewed' | t
+  assign discountTitle = section.settings.discount_title
+  assign discountDetail = section.settings.discount_detail
+  assign discountDesc = section.settings.discount_desc
+  assign balanceCheckUrl = section.settings.balance_check_url
+  assign balanceCheckLabel = section.settings.balance_check_label
+  assign termsOfUseTitle = section.settings.terms_of_use_title
+  assign termsOfUse = section.settings.terms_of_use
+  assign customisationProduct = section.settings['customisation-product']
+
+  assign usps = section.blocks | where: 'type', 'usp'
+  assign points = section.blocks | where: 'type', 'additional'
+%}
+
+<div class="flex flex-col md:flex-row">
+  {%- render 'breadcrumbs' with class: "md:hidden" -%}
+  <div class="shrink-0 md:basis-2/3">
+    {%- render 'product-gallery' -%}
+  </div>
+  <div class="flex flex-col h-full border-t divide-y divide-neutrals-medium-grey border-neutrals-medium-grey md:sticky md:top-28 md:basis-1/3">
+    {%- render 'breadcrumbs' with class: "hidden md:flex" -%}
+    {% render 'product-info' %}
+    {% render 'product-swatches' %}
+    {% render 'product-form' with points: points %}
+    {% render 'product-usps' with usps: usps %}
+    {% render "accordion-row" with heading: 'Product Details', content: product.metafields.products.short_description %}
+    {% render "accordion-row" with heading: 'Materials & Composition', content: product.metafields.products.composition %}
+    {% render "accordion-row" with heading: 'Care Instructions', content: product.metafields.products.care_instruction %}
+  </div>
+</div>
+
+<script>
+  const productSku = {{ product.first_available_variant.sku | json }} ?? undefined;
+</script>
+
+{%- capture src_url -%} {{- 'section-product-main.js' | asset_url -}} {%- endcapture -%}
+{%- render 'atom_script', src: src_url, priority: 'normal', type: 'defer' -%}
+
+{% schema %}
+{
+  "name": "Product Main",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_gallery_zoom",
+      "label": "Enable gallery zoom",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "usp",
+      "name": "USP",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "graphic",
+          "label": "Graphic"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label"
+        }
+      ]
+    },
+    {
+      "type": "additional",
+      "name": "Additional Info",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Icon"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
