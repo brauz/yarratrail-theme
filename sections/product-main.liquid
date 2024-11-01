@@ -29,6 +29,7 @@
     {% render 'product-info' %}
     {% render 'product-swatches' %}
     {% render 'product-form' with points: points %}
+    {% render 'find-in-store' %}
     {% render 'product-usps' with usps: usps %}
     {% render "accordion-row" with heading: 'Product Details', content: product.metafields.products.short_description %}
     {% render "accordion-row" with heading: 'Materials & Composition', content: product.metafields.products.composition %}
