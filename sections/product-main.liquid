@@ -5,6 +5,10 @@
     assign class_inner = 'py-8'
   endif
 
+  capture find_in_store
+    render 'find-in-store'
+  endcapture
+
   assign title = 'product.general.recently_viewed' | t
   assign discountTitle = section.settings.discount_title
   assign discountDetail = section.settings.discount_detail
@@ -29,8 +33,8 @@
     {% render 'product-info' %}
     {% render 'product-swatches' %}
     {% render 'product-form' with points: points %}
-    {% render 'find-in-store' %}
     {% render 'product-usps' with usps: usps %}
+    {% render "accordion-row" with heading: 'Delivery & In Store Options', content: find_in_store %}
     {% render "accordion-row" with heading: 'Product Details', content: product.metafields.products.short_description %}
     {% render "accordion-row" with heading: 'Materials & Composition', content: product.metafields.products.composition %}
     {% render "accordion-row" with heading: 'Care Instructions', content: product.metafields.products.care_instruction %}
